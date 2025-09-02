@@ -32,7 +32,6 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
     }
   }
 
-  /// Save task in SharedPreferences
   Future<void> _saveTask() async {
     if (_nameController.text.isEmpty || selectedPriority == null) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -57,7 +56,7 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
     await prefs.setStringList("tasks", tasks);
 
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text("Task '$task' saved successfully ✅")),
+      SnackBar(content: Text("Task '${_nameController.text}' saved successfully ✅")),
     );
 
     _nameController.clear();
@@ -69,16 +68,19 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
       alertEnabled = false;
     });
 
-    Navigator.pop(context, true); // 👈 go back & trigger reload
+    Navigator.pop(context, true);
   }
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context); // Get current theme
+    final isDark = theme.brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: theme.colorScheme.background,
       appBar: AppBar(
-        backgroundColor: Colors.black,
-        foregroundColor: Colors.white,
+        backgroundColor: theme.colorScheme.background,
+        foregroundColor: theme.colorScheme.onBackground,
         elevation: 0,
         title: const Text("Create new task"),
         centerTitle: true,
@@ -89,21 +91,24 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text("Schedule",
-                  style: TextStyle(color: Colors.white, fontSize: 16)),
-
+              Text(
+                "Schedule",
+                style: TextStyle(color: theme.colorScheme.onBackground, fontSize: 16),
+              ),
               const SizedBox(height: 8),
+
               // Task Name
               TextField(
                 controller: _nameController,
-                style: const TextStyle(color: Colors.white),
+                style: TextStyle(color: theme.colorScheme.onBackground),
                 decoration: InputDecoration(
                   hintText: "Name",
-                  hintStyle: const TextStyle(color: Colors.white54),
+                  hintStyle: TextStyle(color: theme.colorScheme.onBackground.withOpacity(0.5)),
                   filled: true,
-                  fillColor: Colors.grey[900],
+                  fillColor: theme.colorScheme.surface,
                   border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12)),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
               ),
               const SizedBox(height: 12),
@@ -112,18 +117,19 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
               TextField(
                 controller: _descController,
                 maxLines: 3,
-                style: const TextStyle(color: Colors.white),
+                style: TextStyle(color: theme.colorScheme.onBackground),
                 decoration: InputDecoration(
                   hintText: "Description",
-                  hintStyle: const TextStyle(color: Colors.white54),
+                  hintStyle: TextStyle(color: theme.colorScheme.onBackground.withOpacity(0.5)),
                   filled: true,
-                  fillColor: Colors.grey[900],
+                  fillColor: theme.colorScheme.surface,
                   border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12)),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
               ),
-
               const SizedBox(height: 16),
+
               // Time Pickers
               Row(
                 children: [
@@ -133,19 +139,16 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
                       child: Container(
                         padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
-                          color: Colors.grey[900],
+                          color: theme.colorScheme.surface,
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Row(
                           children: [
-                            const Icon(Icons.access_time,
-                                color: Colors.purpleAccent),
+                            Icon(Icons.access_time, color: theme.colorScheme.primary),
                             const SizedBox(width: 8),
                             Text(
-                              startTime == null
-                                  ? "Start Time"
-                                  : startTime!.format(context),
-                              style: const TextStyle(color: Colors.white),
+                              startTime == null ? "Start Time" : startTime!.format(context),
+                              style: TextStyle(color: theme.colorScheme.onSurface),
                             ),
                           ],
                         ),
@@ -159,19 +162,16 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
                       child: Container(
                         padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
-                          color: Colors.grey[900],
+                          color: theme.colorScheme.surface,
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Row(
                           children: [
-                            const Icon(Icons.access_time,
-                                color: Colors.purpleAccent),
+                            Icon(Icons.access_time, color: theme.colorScheme.primary),
                             const SizedBox(width: 8),
                             Text(
-                              endTime == null
-                                  ? "End Time"
-                                  : endTime!.format(context),
-                              style: const TextStyle(color: Colors.white),
+                              endTime == null ? "End Time" : endTime!.format(context),
+                              style: TextStyle(color: theme.colorScheme.onSurface),
                             ),
                           ],
                         ),
@@ -180,11 +180,10 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
                   ),
                 ],
               ),
-
               const SizedBox(height: 16),
+
               // Priority buttons
-              const Text("Priority",
-                  style: TextStyle(color: Colors.white, fontSize: 16)),
+              Text("Priority", style: TextStyle(color: theme.colorScheme.onBackground, fontSize: 16)),
               const SizedBox(height: 8),
               Row(
                 children: ["High", "Medium", "Low"].map((priority) {
@@ -194,66 +193,60 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
                       padding: const EdgeInsets.symmetric(horizontal: 4),
                       child: OutlinedButton(
                         style: OutlinedButton.styleFrom(
-                          backgroundColor:
-                          isSelected ? Colors.purpleAccent : Colors.black,
+                          backgroundColor: isSelected
+                              ? theme.colorScheme.primary
+                              : theme.colorScheme.surface,
                           side: BorderSide(
                             color: isSelected
-                                ? Colors.purpleAccent
-                                : Colors.white30,
+                                ? theme.colorScheme.primary
+                                : theme.colorScheme.onSurface.withOpacity(0.3),
                           ),
                         ),
-                        onPressed: () {
-                          setState(() {
-                            selectedPriority = priority;
-                          });
-                        },
-                        child: Text(priority,
-                            style: TextStyle(
-                                color: isSelected
-                                    ? Colors.black
-                                    : Colors.white)),
+                        onPressed: () => setState(() => selectedPriority = priority),
+                        child: Text(
+                          priority,
+                          style: TextStyle(
+                              color: isSelected ? theme.colorScheme.onPrimary : theme.colorScheme.onSurface),
+                        ),
                       ),
                     ),
                   );
                 }).toList(),
               ),
-
               const SizedBox(height: 16),
+
               // Alert toggle
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text("Get alert for this task",
-                      style: TextStyle(color: Colors.white)),
+                  Text("Get alert for this task", style: TextStyle(color: theme.colorScheme.onBackground)),
                   Switch(
-                    activeColor: Colors.purpleAccent,
+                    activeColor: theme.colorScheme.primary,
                     value: alertEnabled,
-                    onChanged: (value) {
-                      setState(() {
-                        alertEnabled = value;
-                      });
-                    },
+                    onChanged: (value) => setState(() => alertEnabled = value),
                   ),
                 ],
               ),
-
               const SizedBox(height: 20),
+
               // Create Task Button
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 14),
-                    backgroundColor: Colors.purpleAccent,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12)),
+                    backgroundColor: theme.colorScheme.primary,
                   ),
                   onPressed: _saveTask,
-                  child: const Text("Create Task",
-                      style:
-                      TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                  child: Text(
+                    "Create Task",
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: theme.colorScheme.onPrimary),
+                  ),
                 ),
-              )
+              ),
             ],
           ),
         ),

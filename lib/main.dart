@@ -18,9 +18,17 @@ class TodoApp extends StatelessWidget {
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(
           seedColor: Colors.purpleAccent,
-          brightness: Brightness.dark,
+          brightness: Brightness.light, // Light mode
         ),
       ),
+      darkTheme: ThemeData(
+        useMaterial3: true,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.purpleAccent,
+          brightness: Brightness.dark, // Dark mode
+        ),
+      ),
+      themeMode: ThemeMode.system, // 👈 Automatically switch based on system setting
       initialRoute: "/",
       routes: {
         "/": (context) => const DisplayPage(),
