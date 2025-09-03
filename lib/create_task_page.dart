@@ -51,10 +51,16 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
     final task = {
       "name": _nameController.text,
       "description": _descController.text,
-      "startTime": startTime?.format(context) ?? "",
+      "startTime": startTime != null
+          ? "${startTime!.hour.toString().padLeft(2,'0')}:${startTime!.minute.toString().padLeft(2,'0')}"
+          : "",
+      "endTime": endTime != null
+          ? "${endTime!.hour.toString().padLeft(2,'0')}:${endTime!.minute.toString().padLeft(2,'0')}"
+          : "",
+
       "date":
       "${selectedDate.day}/${selectedDate.month}/${selectedDate.year}",
-      "endTime": endTime?.format(context) ?? "",
+
       "priority": selectedPriority,
       "alert": alertEnabled,
       "completed": false,
