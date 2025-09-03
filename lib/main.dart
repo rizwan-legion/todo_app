@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'create_task_page.dart';
 import 'display_page.dart';
+import 'theme/theme_config.dart'; // 👈 correct import
 
 void main() {
   runApp(const TodoApp());
@@ -14,21 +15,7 @@ class TodoApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Todo App',
-      theme: ThemeData(
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.purpleAccent,
-          brightness: Brightness.light, // Light mode
-        ),
-      ),
-      darkTheme: ThemeData(
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.purpleAccent,
-          brightness: Brightness.dark, // Dark mode
-        ),
-      ),
-      themeMode: ThemeMode.system, // 👈 Automatically switch based on system setting
+      theme: AppTheme.blackTheme,
       initialRoute: "/",
       routes: {
         "/": (context) => const DisplayPage(),
