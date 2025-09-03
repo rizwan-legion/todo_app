@@ -180,7 +180,7 @@ class _DisplayPageState extends State<DisplayPage> {
                   filled: true,
                   fillColor: const Color(0xFF1C1C1C),
                   prefixIcon: const Icon(Icons.search, color: Colors.white54),
-                  border: InputBorder.none, // ❌ removes outline
+                  border: InputBorder.none,
                   enabledBorder: InputBorder.none,
                   focusedBorder: InputBorder.none,
                   contentPadding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16), // ✅ padding for better look
